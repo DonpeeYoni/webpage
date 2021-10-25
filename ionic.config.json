@@ -1,0 +1,12 @@
+{
+  "defaultProject": "yoni-packs",
+  "projects": {
+    "yoni-packs": {
+      "name": "YoniPacks-Business",
+      "integrations": {
+        "capacitor": {}
+      },
+      "type": "angular"
+    }
+  }
+}

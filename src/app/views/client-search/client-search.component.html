@@ -1,0 +1,55 @@
+<div class="client-search-component container">
+    <div class="card client-search-container mt-5" xmlns="http://www.w3.org/1999/html">
+        <div class="row no-gutters">
+            <div class="col-md-12">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+
+                        </div>
+                        <div class="col-md-4">
+                            <h1 class="text-center">Search Client</h1>
+                            <form>
+                                <div>
+                                    <div class="input-group mb-3">
+                                        <input [(ngModel)]="searched_customer_phone" name="searched_customer_phone"
+                                            type="text" class="form-control" placeholder="Numéro du client*">
+                                        <div class="input-group-append">
+                                            <span (click)="searchClick()" class="input-group-text search-btn">
+                                                <div *ngIf="showLoading"
+                                                    class="spinner-border text-secondary search-loading" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                                SEARCH
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <h1 class="text-center">Result</h1>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Nom de client*"
+                                            autocorrect="off" autocapitalize="off" spellcheck="off" type="text"
+                                            [(ngModel)]="formData.customer_name" name="customer_name">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Numéro du client*"
+                                            autocorrect="off" autocapitalize="off" spellcheck="off" type="text"
+                                            [(ngModel)]="formData.customer_phone" name="customer_phone">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Adresse du client*"
+                                            autocorrect="off" autocapitalize="off" spellcheck="off" type="text"
+                                            [(ngModel)]="formData.customer_address" name="customer_address">
+                                    </div>
+                                    <p>{{responseMessage}}</p>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

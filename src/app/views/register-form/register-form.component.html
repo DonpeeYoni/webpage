@@ -1,0 +1,120 @@
+<div class="container register-form-component">
+  <div class="card register-card register-card-border">
+    <div class="card-body p-0">
+      <div class="row">
+        <div class="col-md-5">
+          <img src="assets/images/yoni-side.png" alt="register" class="register-card-img">
+        </div>
+        <div class="col-md-7 register-form-div mt-5">
+          <div class="brand-wrapper text-center">
+            <img src="assets/images/yoni-packs-logo.png" alt="logo" class="logo">
+          </div>
+          <p class="register-card-description text-center">Créer un compte</p>
+          <form action="#" [formGroup]="registerForm" (ngSubmit)="registerClick()" class="register-form">
+            <div class="form-group">
+              <input formControlName="name" type="text" name="name" id="name" class="form-control"
+                placeholder="Company Name" autofocus>
+            </div>
+            <div class="form-group">
+              <input formControlName="email_id" type="email" name="email_id" id="email_id" class="form-control"
+                placeholder="E-mail" autofocus>
+            </div>
+            <div class="form-group">
+              <!-- formControlName="phone_no" -->
+              <input type="tel" formControlName="phone" name="phone_no" id="phone_no" class="form-control"
+                placeholder="Téléphone" autofocus #phone_no>
+            </div>
+            <div class="form-group">
+              <input formControlName="password" type="password" name="password" id="password" class="form-control"
+                placeholder="Mot de passe">
+            </div>
+            <div class="form-group">
+              <input formControlName="confirm_password" type="password" name="confirm_password" id="confirm_password"
+                class="form-control" placeholder="Confirmez mot de passe">
+            </div>
+
+            <div *ngIf="isMobile">
+              <div class="form-group">
+                <label for="ninea" class="label-text">NINEA</label>
+                <div class="text-center choose-file">
+                  <div *ngIf="!nineaImage">
+                    <div class="choose-file-text"> Choose Image <ion-icon (click)="selectImage('ninea')" name="add-outline" class="plus-icon"></ion-icon></div>                    
+                  </div>
+                  <div *ngIf="nineaImage">
+                    <div class="choose-file-text"> Remove Image <ion-icon (click)="removeImage('ninea')" name="close-outline" class="close-icon"></ion-icon></div>                    
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="company_registration" class="label-text">Registre de commerce</label>
+                <div class="text-center choose-file">
+                  <div *ngIf="!companyRegistrationImage">
+                    <div class="choose-file-text"> Choose Image <ion-icon (click)="selectImage('company_registration')" name="add-outline" class="plus-icon"></ion-icon></div>                    
+                  </div>
+                  <div *ngIf="companyRegistrationImage">
+                    <div class="choose-file-text"> Remove Image <ion-icon (click)="removeImage('company_registration')" name="close-outline" class="close-icon"></ion-icon></div>                    
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="customer_identity_document" class="label-text">Piece d'identité</label>
+                <div class="text-center choose-file">
+                  <div *ngIf="!customerIdentityDocumentImage">
+                    <div class="choose-file-text"> Choose Image <ion-icon  (click)="selectImage('customer_identity_document')" name="add-outline" class="plus-icon"></ion-icon></div>
+                  </div>
+                  <div *ngIf="customerIdentityDocumentImage">
+                    <div class="choose-file-text"> Remove Image <ion-icon (click)="removeImage('customer_identity_document')" name="close-outline" class="close-icon"></ion-icon></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div *ngIf="!isMobile">
+              <div class="form-group">
+                <label for="ninea" class="label-text">NINEA</label>
+                <input formControlName="ninea" type="file" accept="image/*" class="form-control ninea mb-0"
+                  placeholder="NINEA" name="ninea" id="ninea" (change)="onFileChange($event,'ninea')">
+              </div>
+              <div class="form-group">
+                <label for="company_registration" class="label-text">Registre de commerce</label>
+                <input formControlName="company_registration" type="file" accept="image/*"
+                  class="form-control company_registration mb-0" placeholder="Registre de commerce"
+                  name="company_registration" id="company_registration"
+                  (change)="onFileChange($event,'company_registration')">
+              </div>
+              <div class="form-group mb-4">
+                <label for="customer_identity_document" class="label-text">Piece d'identité</label>
+                <input formControlName="customer_identity_document" type="file" accept="image/*"
+                  class="form-control customer_identity_document" placeholder="Piece d'identité du gérant"
+                  name="customer_identity_document" id="customer_identity_document"
+                  (change)="onFileChange($event,'customer_identity_document')">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label><input formControlName="accept" type="checkbox" class="accept"
+                  placeholder="Accept terms and conditions" name="accept" id="accept">
+                Accept terms and conditions</label>
+            </div>
+            <input
+              [disabled]="registerForm.invalid || registerForm.get('password').value == '' || registerForm.get('confirm_password').value != registerForm.get('password').value || !registerForm.get('accept').value"
+              name="register" id="register" class="btn btn-block register-btn mb-4" type="submit" value="Connexion">
+            <div class="text-center mb-2">
+              <a class="link" aria-current="page" (click)="goToLoginClick()" target="_blank">Connectez-vous</a>
+            </div>
+            <div class="text-center loader-div">
+              <div *ngIf="showLoading" class="spinner-border text-secondary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

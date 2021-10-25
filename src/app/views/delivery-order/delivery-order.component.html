@@ -1,0 +1,232 @@
+<div class="delivery-order-component container">
+  <div class="card delivery-order" xmlns="http://www.w3.org/1999/html">
+    <div class="card-body p-0">
+      <div class="row">
+        <div class="col-md-6 d-none d-md-block">
+          <div class="h-100">
+            <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
+              <agm-marker [latitude]="latitude" [longitude]="longitude"></agm-marker>
+            </agm-map>
+          </div>
+        </div>
+        <div class="col-md-6 p-5">
+          <div>
+            <div>
+              <p class="delivery-order-description text-center">Bienvenue <b>{{userObj['user_name']}}</b></p>
+              <p class="delivery-order-description text-center">Creez une course</p>
+              <div class="form-group">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" (change)="radioChange($event,'trajet-simple')" type="radio"
+                    name="inlineRadioOptions" id="trajet-simple" value="trajet-simple" [(ngModel)]="selectedRadio">
+                  <label class="form-check-label" for="trajet-simple">Trajet simple</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" (change)="radioChange($event,'multi-trajet')" type="radio"
+                    name="inlineRadioOptions" id="multi-trajet" value="multi-trajet" [(ngModel)]="selectedRadio">
+                  <label class="form-check-label" for="multi-trajet">Multi-trajet</label>
+                </div>
+              </div>
+              <form #singleForm="ngForm" class="single-delivery-order-form">
+                <div [hidden]="selectedRadio != 'trajet-simple'" id="trajet-simple">
+                  <div *ngFor="let item of formData['destinations'];let i = index;">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Nom de client*" autocorrect="off"
+                        autocapitalize="off" spellcheck="off" type="text" [(ngModel)]="item.customer_name"
+                        name="customer_name{{i}}" required noWhiteSpace autofocus>
+                    </div>
+
+                    <div class="form-group flex phone_no_div">
+                      <div class="input-group">
+                        <input type="tel" class="form-control phone_no" placeholder="Téléphone" [(ngModel)]="item.customer_phone_no" name="customer_single_phone_no{{i}}" id="customer_single_phone_no{{i}}"
+                          #single_phone_no required noWhiteSpace>
+                      </div>
+                      <div class="input-group-append">
+                        <span (click)="searchClick('single',item.customer_phone_no,i)"
+                          class="input-group-text search-btn">
+                          <div *ngIf="showSearchLoading && loadingIndex == i"
+                            class="spinner-border text-secondary search-loading" role="status">
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                          <svg *ngIf="!showSearchLoading || loadingIndex != i" xmlns="http://www.w3.org/2000/svg"
+                            width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path
+                              d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+
+                    <p *ngIf="searchClientResponseMessage && loadingIndex == i">{{searchClientResponseMessage}}</p>
+                    <div class="form-group">
+                      <input type="text" class="form-control" (input)="resetAmount(item,i);"
+                        (keydown.enter)="$event.preventDefault()" placeholder="Adresse du client*" autocorrect="off"
+                        autocapitalize="off" spellcheck="off" type="text" #single_address_search
+                        [(ngModel)]="item.customer_address" name="customer_address{{i}}" required noWhiteSpace>
+                      <p *ngIf="item.amount && showPrice"><span class="badge bg-light">Prix de la course:</span>
+                        <span class="badge bg-light"><b>{{item.amount}} {{item.currency}}</b></span>&nbsp;
+                      </p>
+                      <p *ngIf="amountResponseMessage">{{amountResponseMessage}}</p>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" (change)="dateTimeRadioChange($event,'no-date-time')"
+                          type="radio" name="inlineDateTimeRadioOptions" id="no-date-time" value="no-date-time"
+                          [(ngModel)]="selectedDateTimeRadio">
+                        <label class="form-check-label" for="no-date-time">Tout de suite</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" (change)="dateTimeRadioChange($event,'date-time')" type="radio"
+                          name="inlineDateTimeRadioOptions" id="date-time" value="date-time"
+                          [(ngModel)]="selectedDateTimeRadio">
+                        <label class="form-check-label" for="date-time">Planifier la course</label>
+                      </div>
+                    </div>
+                    
+                    <div *ngIf="selectedDateTimeRadio == 'date-time'">
+                      <div class="input-group">
+                        <input [minDate]="minDeliveryDate" (focus)="d.open()" class="form-control" placeholder="Select Date" name="datePicker"
+                          [(ngModel)]="deliveryDate" ngbDatepicker #d="ngbDatepicker">
+                        <div class="input-group-append">
+                          <span (click)="d.open()" class="input-group-text search-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                              class="bi bi-calendar-event" viewBox="0 0 16 16">
+                              <path
+                                d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
+                              <path
+                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <ngb-timepicker [meridian]="true" name="timePicker" [(ngModel)]="deliveryTime"></ngb-timepicker>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <textarea placeholder="Description" class="form-control" id="desc" rows="3"
+                        [(ngModel)]="formData.description" name="single_description"></textarea>
+                    </div>
+                  </div>
+                  <input [disabled]="showLoading || !singleForm.valid || !amountValid()" (click)="submitDeliveryOrder('single')"
+                    name="validate" id="validate" class="btn btn-block valider-btn mb-4" type="button" value="Valider">
+                  <div class="text-center">
+                    <div *ngIf="showLoading" class="spinner-border text-secondary search-loading" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                  <!-- <p>{{responseMessage}}</p> -->
+                </div>
+              </form>
+              <form #multipleForm="ngForm" class="multiple-delivery-order-form">
+                <div [hidden]="selectedRadio != 'multi-trajet'" id="multi-trajet">
+                  <div *ngFor="let item of formData['destinations'];let i = index;">
+
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Nom de client*" autocorrect="off"
+                        autocapitalize="off" spellcheck="off" type="text" [(ngModel)]="item.customer_name"
+                        name="customer_name{{i}}" required noWhiteSpace autofocus>
+                    </div>
+                    <div class="form-group flex phone_no_div">
+                      <div class="input-group">
+                        <input type="tel" class="form-control phone_no" placeholder="Téléphone" [(ngModel)]="item.customer_phone_no" name="customer_multiple_phone_no{{i}}" id="customer_multiple_phone_no{{i}}"
+                            #multiple_phone_no required noWhiteSpace>
+                      </div>
+                      <div class="input-group-append">
+                        <span (click)="searchClick('multiple',item.customer_phone_no,i)"
+                          class="input-group-text search-btn">
+                          <div *ngIf="showSearchLoading && loadingIndex == i"
+                            class="spinner-border text-secondary search-loading" role="status">
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                          <svg *ngIf="!showSearchLoading || loadingIndex != i" xmlns="http://www.w3.org/2000/svg"
+                            width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path
+                              d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+
+                    <p *ngIf="searchClientResponseMessage && loadingIndex == i">{{searchClientResponseMessage}}</p>
+                    <div class="form-group">
+                      <input type="text" class="form-control" (input)="resetAmount(item,i);"
+                        (keydown.enter)="$event.preventDefault();" (focus)="selectedAddress(item,i);"
+                        placeholder="Adresse du client*" autocorrect="off" autocapitalize="off" spellcheck="off"
+                        type="text" [(ngModel)]="item.customer_address" name="customer_address{{i}}"
+                        #multiple_address_search required noWhiteSpace>
+                      <p *ngIf="item.amount && showPrice"><span class="badge bg-light">Prix de la course:</span>
+                        <span class="badge bg-light"><b>{{item.amount}} {{item.currency}}</b></span>&nbsp;</p>
+                      <p *ngIf="amountResponseMessage">{{amountResponseMessage}}</p>
+
+                    </div>
+                    <div>
+                      <div class="mb-4 ta-r">
+                        <input *ngIf="formData['destinations'].length > 1" (click)="removeClient(i)" name="validate"
+                          id="validate" class="btn btn-block remove-btn" type="button" value="-">
+                        <input *ngIf="i == (formData['destinations'].length -1)" (click)="addClient()" name="validate"
+                          id="validate" class="btn btn-block add-btn" type="button" value="+">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" (change)="dateTimeRadioChange($event,'no-date-time')" type="radio"
+                        name="inlineDateTimeRadioOptions" id="no-date-time" value="no-date-time"
+                        [(ngModel)]="selectedDateTimeRadio">
+                      <label class="form-check-label" for="no-date-time">Tout de suite</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" (change)="dateTimeRadioChange($event,'date-time')" type="radio"
+                        name="inlineDateTimeRadioOptions" id="date-time" value="date-time"
+                        [(ngModel)]="selectedDateTimeRadio">
+                      <label class="form-check-label" for="date-time">Planifier la course</label>
+                    </div>
+                  </div>
+
+                  <div *ngIf="selectedDateTimeRadio == 'date-time'">
+                    <div class="input-group">
+                      <input [minDate]="minDeliveryDate" (focus)="d.open()" class="form-control" placeholder="Select Date" name="datePicker"
+                        [(ngModel)]="deliveryDate" ngbDatepicker #d="ngbDatepicker">
+                      <div class="input-group-append">
+                        <span (click)="d.open()" class="input-group-text search-btn">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-calendar-event" viewBox="0 0 16 16">
+                            <path
+                              d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
+                            <path
+                              d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <ngb-timepicker [meridian]="true" name="timePicker" [(ngModel)]="deliveryTime"></ngb-timepicker>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <textarea [(ngModel)]="formData.description" name="multiple_description" placeholder="Description"
+                      class="form-control" id="desc" rows="3"></textarea>
+                  </div>
+                  <input [disabled]="formData['destinations'].length < 2 || !multipleForm.valid || !amountValid()"
+                    (click)="submitDeliveryOrder('multiple')" name="validate" id="validate" class="btn btn-block valider-btn mb-4"
+                    type="button" value="Valider">
+                  <div class="text-center">
+                    <div *ngIf="showLoading" class="spinner-border text-secondary search-loading" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                  <!-- <p>{{responseMessage}}</p> -->
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

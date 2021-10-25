@@ -1,0 +1,86 @@
+// In this scss you can overwrite all our scss, we suggested you to add your scss into this, so whenever the update comes it will not affect your code.
+.btn-default
+{
+    color: #fff !important;
+    background-color: #00cfa3 !important;
+    border-color: #00cfa3 !important;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-default-danger
+{
+    color: #fff !important;
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.ngb-tp-hour, .ngb-tp-minute
+{
+    width: 45% !important;
+}
+.ngb-tp-spacer
+{
+    width: 10% !important;
+}
+
+
+.phone_no
+{
+    height: 37px;
+}
+
+.flex
+{
+    display: flex;
+}
+
+.phone_no_div
+{
+    margin-bottom: 20px;
+}
+
+.iti 
+{
+    width: 100%;
+}
+
+mat-dialog-container
+{
+    padding: 0px !important;
+}
+
+.datepicker-field
+{
+    width: 100%;
+    border: 1px solid #d5dae2;
+    margin-bottom: 20px;
+    border-radius: .25rem;
+    min-height: 37px;
+}
+
+.datepicker-field .mat-form-field-suffix
+{
+    width: 40px !important;
+    text-align: center !important;
+}
+.datepicker-field .mat-form-field-flex
+{
+    padding-left: 24px !important; 
+}
+
+.mat-form-field-suffix .mat-datepicker-toggle-default-icon
+{
+    width: 24px !important;
+}
+
+// in global stylesheet
+.mat-input-container.app-input-no-underline .mat-input-underline {
+    display: none;
+  }
